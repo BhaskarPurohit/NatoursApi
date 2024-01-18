@@ -93,15 +93,21 @@ const deleteToursById = (req, res)=>{
     })
 }
 //adding a methods
-app.get('/api/v1/tours',getAllTours)
+// app.get('/api/v1/tours',getAllTours)
 
-app.get('/api/v1/tours/:id',getToursById)
+// app.get('/api/v1/tours/:id',getToursById)
 
-app.post('/api/v1/tours',postTours)
+// app.post('/api/v1/tours',postTours)
 
-app.patch('/api/v1/tours/:id',patchToursById)
+// app.patch('/api/v1/tours/:id',patchToursById)
 
-app.delete('/api/v1/tours/:id',deleteToursById)
+// app.delete('/api/v1/tours/:id',deleteToursById)
+
+
+//defining by routes
+app.route('/api/v1/tours').get(getAllTours).post(postTours)
+
+app.route('/api/v1/tours/:id').get(getToursById).patch(patchToursById).delete(deleteToursById)
 
 app.listen(3000, ()=>{
     console.log("app running on port 3000")
