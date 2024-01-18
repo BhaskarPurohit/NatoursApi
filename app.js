@@ -1,18 +1,8 @@
 const express = require("express")
 const app = express()
 
-app.get("/",(req,res)=>{
-    res.send("server running")
-})
-
-app.get('/first',(req,res)=>{
-    res.send("hitting the first route")
-})
-
-app.get('/sendJSON',(req,res)=>{
-    res.json({
-        response:"I am a JSON"
-    })
+app.get('/api/v1/tours',(req,res)=>{
+    res.status(200).json()
 })
 
 app.listen(3000, ()=>{
