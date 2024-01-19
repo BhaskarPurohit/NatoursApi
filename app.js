@@ -1,14 +1,32 @@
 const express = require("express")
-const app = express()
 const fs = require('fs')
+const morgan = require('morgan')
+
+const app = express()
+
 
 //adding middleware
+app.use(morgan('dev'))
 app.use(express.json())
+
+app.use((req,res,next)=>{  //third argument is next function, we can call it whenever we want
+    console.log('Hello from the middleware')
+    next()
+
+})
+
+app.use((req, res, next)=>{
+    req.requestTime = new Date().toISOString()
+    next()
+})
+
+
 
 const tours = JSON.parse(fs.readFileSync(`${__dirname}/dev-data/data/tours-simple.json`))
 
-//defining callback functions
+//defining callback functions for route handlers
 const getAllTours= (req,res)=>{
+    console.log(req.requestTime);
     res.status(200).json({
         status:'success',
         results: tours.length,
@@ -109,6 +127,8 @@ app.route('/api/v1/tours').get(getAllTours).post(postTours)
 
 app.route('/api/v1/tours/:id').get(getToursById).patch(patchToursById).delete(deleteToursById)
 
+
+//start the server
 app.listen(3000, ()=>{
     console.log("app running on port 3000")
 })
