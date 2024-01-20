@@ -159,14 +159,24 @@ const deleteUser = (req,res)=>{
 // app.delete('/api/v1/tours/:id',deleteToursById)
 
 
+const tourRouter = express.Router(); //creating a new router
+
+const userRouter = express.Router()
+
+app.use('/api/v1.users', userRouter) //this process is called mounting the router
 //defining by routes
-app.route('/api/v1/tours').get(getAllTours).post(postTours)
+app.use('/api/v1/tours', tourRouter)// mounting tourRouter
 
-app.route('/api/v1/tours/:id').get(getToursById).patch(patchToursById).delete(deleteToursById)
+//use tourRouter
+//since tourRouter runs on '/api/v1/tours' anyway, so we are just using the remaining part of the api url
 
-app.route('/api/v1/users').get(getAllUsers).post(createUser)
+tourRouter.route('/').get(getAllTours).post(postTours)
 
-app.route('api/v1/users/:id').get(getUser).patch(updateUser).delete(deleteUser)
+app.route('/:id').get(getToursById).patch(patchToursById).delete(deleteToursById)
+
+app.route('/').get(getAllUsers).post(createUser)
+
+app.route('/:id').get(getUser).patch(updateUser).delete(deleteUser)
 
 
 //start the server
