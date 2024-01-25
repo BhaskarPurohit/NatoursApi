@@ -5,6 +5,7 @@ const app = express()
 const PORT = 3010
 const fs = require('fs')
 
+app.use(morgan('dev'))
 app.use(express.json()) //middleware
 
 app.use((req, res, next)=>{
@@ -16,7 +17,7 @@ app.use((req, res, next)=>{
 
 const tours = JSON.parse(fs.readFileSync(`${__dirname}/dev-data/data/tours-simple.json`))
 
-const apiLink = '/api/v1/tours'
+
 
 
 
