@@ -18,6 +18,7 @@ app.use((req,res,next)=>{
 
 //Mounting the router
 app.use('/api/v1/users',userRouter)
+app.use('/api/v1/tours',tourRouter)
 
 app.listen(PORT, ()=>{
     console.log('running on port ',PORT)
