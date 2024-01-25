@@ -1,20 +1,32 @@
 const { create } = require('domain')
 const express = require('express')
+const morgan = require('morgan')
 const app = express()
 const PORT = 3010
 const fs = require('fs')
 
 app.use(express.json()) //middleware
 
+app.use((req, res, next)=>{
+    req.requestTime = new Date().toISOString()
+    // console.log(req.requestTime)
+
+    next()
+})
+
 const tours = JSON.parse(fs.readFileSync(`${__dirname}/dev-data/data/tours-simple.json`))
 
 const apiLink = '/api/v1/tours'
 
 
+
+
 const getAllTours = (req,res)=>{
+    console.log(req.requestTime);
     res.status(200).json({
         status:'success',
         results: tours.length,
+        requestedAt: req.requestTime,
         data:{
             tours
         }
@@ -103,6 +115,7 @@ app
 .route('/api/v1/tours')
 .get(getAllTours)
 .post(createTour)
+
 
 app
 .route('/api/v1/tours/:id')
