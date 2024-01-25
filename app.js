@@ -2,7 +2,6 @@ const { create } = require('domain')
 const express = require('express')
 const morgan = require('morgan')
 const app = express()
-const PORT = 3010
 
 
 const tourRouter = require('./routes/tourRoutes')
@@ -20,7 +19,5 @@ app.use((req,res,next)=>{
 app.use('/api/v1/users',userRouter)
 app.use('/api/v1/tours',tourRouter)
 
-app.listen(PORT, ()=>{
-    console.log('running on port ',PORT)
-})
+module.exports = app
 
