@@ -7,8 +7,10 @@ app.use(express.json()) //middleware
 
 const tours = JSON.parse(fs.readFileSync(`${__dirname}/dev-data/data/tours-simple.json`))
 
+const apiLink = '/api/v1/tours'
 
-app.get('/api/v1/tours',(req,res)=>{
+
+app.get(apiLink,(req,res)=>{
     res.status(200).json({
         status:'success',
         results: tours.length,
@@ -18,7 +20,7 @@ app.get('/api/v1/tours',(req,res)=>{
     })
 })
 
-app.post('/api/v1/tours',(req, res)=>{
+app.post(apiLink,(req, res)=>{
     const newId = tours[tours.length -1].id + 1
     const newTour = Object.assign({id: newId}, req.body)
 
@@ -35,7 +37,7 @@ app.post('/api/v1/tours',(req, res)=>{
     })
 })
 
-app.get('/api/v1/tours/:id',(req,res)=>{
+app.get(apiLink+'/:id',(req,res)=>{
     console.log(req.params)
     const id = req.params.id *1
 
@@ -57,6 +59,35 @@ app.get('/api/v1/tours/:id',(req,res)=>{
         })
     
 })
+
+app.patch(apiLink+'/:id', (req,res)=>{
+    if(req.params.id *1 > tours.length){
+        res.status(404).json({
+            status:'failed!',
+            message:'Invalid id'
+        })
+    }
+    res.status(200).json({
+        status:'success',
+        data:{
+            tour:'<Updated tour here..>'
+        }
+    })
+})
+
+app.delete(apiLink+'/:id', (req,res)=>{
+    if(req.params.id *1 > tours.length){
+        res.status(404).json({
+            status:'failed!',
+            message:'Invalid id'
+        })
+    }
+    res.status(204).json({
+        status: 'success',
+        data: null
+    })
+})
+
 
 app.listen(PORT, ()=>{
     console.log('running on port ',PORT)
