@@ -1,3 +1,4 @@
+const { create } = require('domain')
 const express = require('express')
 const app = express()
 const PORT = 3010
@@ -10,7 +11,7 @@ const tours = JSON.parse(fs.readFileSync(`${__dirname}/dev-data/data/tours-simpl
 const apiLink = '/api/v1/tours'
 
 
-app.get(apiLink,(req,res)=>{
+const getAllTours = (req,res)=>{
     res.status(200).json({
         status:'success',
         results: tours.length,
@@ -18,26 +19,9 @@ app.get(apiLink,(req,res)=>{
             tours
         }
     })
-})
+}
 
-app.post(apiLink,(req, res)=>{
-    const newId = tours[tours.length -1].id + 1
-    const newTour = Object.assign({id: newId}, req.body)
-
-    tours.push(newTour)
-
-    fs.writeFile(`${__dirname}/dev-data/data/tours-simple.json`, JSON.stringify(tours), err=> {
-         res.status(201).json({  // 201 is status for Created, 200 is for OK
-            status: 'success',
-            data:{
-                tour: newTour
-            }
-         })
-        
-    })
-})
-
-app.get(apiLink+'/:id',(req,res)=>{
+const getTour= (req,res)=>{
     console.log(req.params)
     const id = req.params.id *1
 
@@ -58,9 +42,26 @@ app.get(apiLink+'/:id',(req,res)=>{
             }
         })
     
-})
+}
 
-app.patch(apiLink+'/:id', (req,res)=>{
+const createTour = (req, res)=>{
+    const newId = tours[tours.length -1].id + 1
+    const newTour = Object.assign({id: newId}, req.body)
+
+    tours.push(newTour)
+
+    fs.writeFile(`${__dirname}/dev-data/data/tours-simple.json`, JSON.stringify(tours), err=> {
+         res.status(201).json({  // 201 is status for Created, 200 is for OK
+            status: 'success',
+            data:{
+                tour: newTour
+            }
+         })
+        
+    })
+}
+
+const updateTour = (req,res)=>{
     if(req.params.id *1 > tours.length){
         res.status(404).json({
             status:'failed!',
@@ -73,9 +74,9 @@ app.patch(apiLink+'/:id', (req,res)=>{
             tour:'<Updated tour here..>'
         }
     })
-})
+}
 
-app.delete(apiLink+'/:id', (req,res)=>{
+const deleteTour = (req,res)=>{
     if(req.params.id *1 > tours.length){
         res.status(404).json({
             status:'failed!',
@@ -86,8 +87,28 @@ app.delete(apiLink+'/:id', (req,res)=>{
         status: 'success',
         data: null
     })
-})
+}
 
+// app.get(apiLink,getAllTours)
+
+// app.post(apiLink,createTour)
+
+// app.get(apiLink+'/:id',getTour)
+
+// app.patch(apiLink+'/:id', updateTour)
+
+// app.delete(apiLink+'/:id', deleteTour)
+
+app
+.route('/api/v1/tours')
+.get(getAllTours)
+.post(createTour)
+
+app
+.route('/api/v1/tours/:id')
+.get(getTour)
+.patch(updateTour)
+.delete(deleteTour)
 
 app.listen(PORT, ()=>{
     console.log('running on port ',PORT)
