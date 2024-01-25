@@ -8,13 +8,10 @@ const fs = require('fs')
 app.use(morgan('dev'))
 app.use(express.json()) //middleware
 
-app.use((req, res, next)=>{
-    req.requestTime = new Date().toISOString()
-    // console.log(req.requestTime)
-
+app.use((req,res,next)=>{
+    console.log('middlewars')
     next()
 })
-
 const tours = JSON.parse(fs.readFileSync(`${__dirname}/dev-data/data/tours-simple.json`))
 
 
@@ -102,6 +99,41 @@ const deleteTour = (req,res)=>{
     })
 }
 
+const getAllUsers = (req,res)=>{
+    res.status(500).json({
+        status:'error',
+        message:"route not yet defined"
+    })
+}
+
+const createUsers = (req,res)=>{
+    res.status(500).json({
+        status:'error',
+        message:"route not yet defined"
+    })
+}
+
+const getUser = (req, res)=>{
+    res.status(500).json({
+        status:'error',
+        message:"route not yet defined"
+    })
+}
+
+const updateUser = (req, res)=>{
+    res.status(500).json({
+        status:'error',
+        message:"route not yet defined"
+    })
+}
+
+const deleteUser = (req, res)=>{
+    res.status(500).json({
+        status:'error',
+        message:"route not yet defined"
+    })
+}
+
 // app.get(apiLink,getAllTours)
 
 // app.post(apiLink,createTour)
@@ -112,17 +144,29 @@ const deleteTour = (req,res)=>{
 
 // app.delete(apiLink+'/:id', deleteTour)
 
-app
-.route('/api/v1/tours')
+const tourRouter = express.Router()
+const userRouter = express.Router()
+
+//Mounting the router
+app.use('/api/v1/tours',tourRouter)
+app.use('/api/v1/users',userRouter)
+
+
+tourRouter
+.route('/')
 .get(getAllTours)
 .post(createTour)
 
 
-app
-.route('/api/v1/tours/:id')
+tourRouter
+.route('/:id')
 .get(getTour)
 .patch(updateTour)
 .delete(deleteTour)
+
+userRouter.route('/').get(getAllUsers).post(createUsers)
+
+userRouter.route('/:id').get(getUser).patch(updateUser).delete(deleteUser)
 
 app.listen(PORT, ()=>{
     console.log('running on port ',PORT)
